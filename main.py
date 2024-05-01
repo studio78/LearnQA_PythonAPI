@@ -1,2 +1,6 @@
 _author__ = 'Stangli Adadurov'
-print('Hello from Stan')
+
+import requests
+
+response = requests.get('https://playground.learnqa.ru/api/get_text')
+print(response.text)
