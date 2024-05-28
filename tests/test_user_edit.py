@@ -10,14 +10,6 @@ _author__ = 'Stangli Adadurov'
 @allure.epic("User Edit cases")
 class TestUserEdit(BaseCase):
 
-    @allure.step("Проверка некорректного ответа и сообщения об ошибке")
-    def negative_assert(self, response: Response, error_text):
-        Assertions.assert_code_status(response, 400)
-        Assertions.assert_json_has_key(response, "error")
-        Assertions.assert_json_value_by_name(response, "error",
-                                             error_text, f"Не корректный текст ошибки: "
-                                                         f"{self.get_json_value(response, 'error')}")
-
     @allure.description("Тест на редактирование только что созданного пользователя")
     def test_edit_just_created_user(self):
         # REGISTER
@@ -51,7 +43,7 @@ class TestUserEdit(BaseCase):
     @allure.description("Тест на невозможность изменить данные пользователя, будучи неавторизованными")
     def test_edit_user_wo_auth(self):
         response = MyRequests.put(f"/user/2", data={"firstName": "Changed Name"})
-        self.negative_assert(response, "Auth token not supplied")
+        Assertions.negative_assert(response, "Auth token not supplied")
 
     @allure.description("Тест на невозможность изменить данные пользователя, будучи авторизованными другим "
                         "пользователем")
@@ -76,7 +68,7 @@ class TestUserEdit(BaseCase):
         # EDIT USER 2
         response4 = MyRequests.put(f"/user/{user_id}", headers={"x-csrf-token": token}, cookies={"auth_sid": auth_sid},
                                    data={"firstName": "Changed Name"})
-        self.negative_assert(response4, "This user can only edit their own data.")
+        Assertions.negative_assert(response4, "This user can only edit their own data.")
 
     params = [
         ({'email': 'emailtest.ru'}, 'Invalid email format'),
@@ -103,5 +95,5 @@ class TestUserEdit(BaseCase):
         # EDIT
         response3 = MyRequests.put(f"/user/{user_id}", headers={"x-csrf-token": token},
                                    cookies={"auth_sid": auth_sid}, data=param[0])
-        self.negative_assert(response3, param[1])
+        Assertions.negative_assert(response3, param[1])
 

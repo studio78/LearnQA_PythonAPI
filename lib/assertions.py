@@ -1,7 +1,10 @@
 from requests import Response
+from lib.base_case import BaseCase
+import allure
 import json
 
 _author__ = 'Stangli Adadurov'
+
 
 class Assertions:
 
@@ -46,3 +49,12 @@ class Assertions:
     def assert_code_status(response: Response, expected_status_code):
         assert response.status_code==expected_status_code, (f"Unexpected status code! Expected: {expected_status_code}."
                                                             f" Actual: {response.status_code}")
+
+    @staticmethod
+    def negative_assert(response: Response, error_text):
+        with allure.step("Проверка некорректного ответа и сообщения об ошибке"):
+            Assertions.assert_code_status(response, 400)
+            Assertions.assert_json_has_key(response, "error")
+            Assertions.assert_json_value_by_name(response, "error",
+                                                 error_text, f"Не корректный текст ошибки: "
+                                                 f"{BaseCase().get_json_value(response, 'error')}")
