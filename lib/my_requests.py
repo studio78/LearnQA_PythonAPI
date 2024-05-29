@@ -32,7 +32,8 @@ class MyRequests():
     def _send(url: str, data: dict, headers: dict, cookies: dict, method: str):
         # берем из окружения
         # url = f"{ENV_OBJECT.get_base_url()}{url}"
-        url = f"https://playground.learnqa.ru/api{url}"
+        url = f"https://playground.learnqa.ru/api_dev{url}"
+        # url = f"https://playground.learnqa.ru/api{url}"
         if headers is None:
             headers = {}
         if cookies is None:
